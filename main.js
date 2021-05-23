@@ -4,10 +4,27 @@ const app = express();
 
 let connectedPlayerId = 0;
 const connectedPlayers = {};
+const connections = {};
 class ConnectedPlayer {
-  constructor(params) {
-    let playerX = 0;
-    let playerY = 0;
+  constructor(id) {
+    this.id = id;
+    this.playerX = 250;
+    this.playerY = 250;
+    this.playerName = "P" + id;
+    this.moveRigth = false;
+    this.moveLeft = false;
+    this.moveUp = false;
+    this.moveDown = false;
+    this.speed = 10;
+  }
+  update() {
+    this.updateMove();
+  }
+  updateMove() {
+    if (this.moveRigth) this.playerX += this.speed;
+    if (this.moveLeft) this.playerX -= this.speed;
+    if (this.moveUp) this.playerY -= this.speed;
+    if (this.moveDown) this.playerY += this.speed;
   }
 }
 
@@ -26,13 +43,37 @@ var server = app.listen(process.env.PORT || 8082, () => {
 // listen for reqs :)
 var io = require("socket.io")(server);
 io.on("connection", (connection) => {
-  console.log("someone connected");
-  connectedPlayers[connectedPlayerId] = new ConnectedPlayer(connection);
+  connections[connectedPlayerId] = connection;
+  const connectedPlayer = new ConnectedPlayer(connectedPlayerId);
+  connectedPlayers[connectedPlayerId] = connectedPlayer;
   connectedPlayerId++;
 
-  connection.on("leave", (data) => {
-    console.log("someone leave");
+  connection.on("keyPressed", (data) => {
+    if (data.inputId === "right") connectedPlayer.moveRigth = data.state;
+    if (data.inputId === "left") connectedPlayer.moveLeft = data.state;
+    if (data.inputId === "up") connectedPlayer.moveUp = data.state;
+    if (data.inputId === "down") connectedPlayer.moveDown = data.state;
   });
+
+  connection.on("disconnect", () => {
+    console.log("someone leave");
+    delete connections[connectedPlayerId];
+    delete connectedPlayers[connectedPlayerId];
+    connectedPlayerId--;
+  });
+
+  // connection.on("leave", (data) => {
+  //   console.log("someone leave");
+  // });
 });
 
-setInterval(() => {}, 1000 / 25);
+setInterval(() => {
+  const entities = [];
+  for (let id in connections) {
+    connectedPlayers[id].update();
+    entities.push(connectedPlayers[id]);
+  }
+  for (let id in connections) {
+    connections[id].emit("update", entities);
+  }
+}, 1000 / 25);

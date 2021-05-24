@@ -1,6 +1,18 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  max-width: 355px;
+  height: 100vh;
+  margin: 0 auto;
+}
+#root {
+}
 #gameMap {
-  /* width: 500px;
-  height: 500px; */
-  background-color: aliceblue;
+  /* width: 600px; */
+  /* height: 100vh; */
+  background-color: rgba(255, 127, 80, 0.309);
+  /* scale: 1.5; */
   z-index: 5;
 }

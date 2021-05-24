@@ -1,32 +1,10 @@
+const ConnectedPlayer = require("./src/server/connectedPlayer");
 const express = require("express");
 const app = express();
 // var server = require("http").Server(app)
 
-let connectedPlayerId = 0;
 const connectedPlayers = {};
 const connections = {};
-class ConnectedPlayer {
-  constructor(id) {
-    this.id = id;
-    this.playerX = 250;
-    this.playerY = 250;
-    this.playerName = "P" + id;
-    this.moveRigth = false;
-    this.moveLeft = false;
-    this.moveUp = false;
-    this.moveDown = false;
-    this.speed = 10;
-  }
-  update() {
-    this.updateMove();
-  }
-  updateMove() {
-    if (this.moveRigth) this.playerX += this.speed;
-    if (this.moveLeft) this.playerX -= this.speed;
-    if (this.moveUp) this.playerY -= this.speed;
-    if (this.moveDown) this.playerY += this.speed;
-  }
-}
 
 app.use(express.static(__dirname + "/src/client"));
 
@@ -43,10 +21,9 @@ var server = app.listen(process.env.PORT || 8082, () => {
 // listen for reqs :)
 var io = require("socket.io")(server);
 io.on("connection", (connection) => {
-  connections[connectedPlayerId] = connection;
-  const connectedPlayer = new ConnectedPlayer(connectedPlayerId);
-  connectedPlayers[connectedPlayerId] = connectedPlayer;
-  connectedPlayerId++;
+  connections[connection.id] = connection;
+  const connectedPlayer = new ConnectedPlayer(connection.id);
+  connectedPlayers[connection.id] = connectedPlayer;
 
   connection.on("keyPressed", (data) => {
     if (data.inputId === "right") connectedPlayer.moveRigth = data.state;
@@ -57,9 +34,9 @@ io.on("connection", (connection) => {
 
   connection.on("disconnect", () => {
     console.log("someone leave");
-    delete connections[connectedPlayerId];
-    delete connectedPlayers[connectedPlayerId];
-    connectedPlayerId--;
+    delete connections[connection.id];
+    delete connectedPlayers[connection.id];
+    delete connectedPlayer;
   });
 
   // connection.on("leave", (data) => {

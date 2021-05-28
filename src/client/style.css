@@ -3,12 +3,11 @@
   padding: 0;
 }
 body {
-  max-width: 355px;
+  max-width: 600px;
   height: 100vh;
   margin: 0 auto;
 }
-#root {
-}
+
 #gameMap {
   /* width: 600px; */
   /* height: 100vh; */

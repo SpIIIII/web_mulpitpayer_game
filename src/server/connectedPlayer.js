@@ -1,15 +1,23 @@
 class ConnectedPlayer {
-  constructor(id) {
-    this.id = id;
-    this.playerX = 200;
-    this.playerY = 100;
-    this.playerName = "P" + id.slice(0, 2);
+  constructor(connection) {
+    this.id = connection.id;
+    this.playerX = 0;
+    this.playerY = 0;
+    this.playerName = "P" + this.id.slice(0, 2);
     this.moveRigth = false;
     this.moveLeft = false;
     this.moveUp = false;
     this.moveDown = false;
-    this.speed = 10;
+    this.speed = 2.5;
+
+    connection.on("keyPressed", (data) => {
+      if (data.inputId === "right") this.moveRigth = data.state;
+      if (data.inputId === "left") this.moveLeft = data.state;
+      if (data.inputId === "up") this.moveUp = data.state;
+      if (data.inputId === "down") this.moveDown = data.state;
+    });
   }
+
   update() {
     this.updateMove();
   }

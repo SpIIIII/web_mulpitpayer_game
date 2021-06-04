@@ -29,6 +29,7 @@ const app = new PIXI.Application({
   resolution: window.devicePixelRatio,
   autoDensity: true,
 });
+
 if (window.addEventListener) {
   window.addEventListener(
     "resize",
@@ -43,34 +44,29 @@ if (window.addEventListener) {
 
 // document.body.appendChild(app.view);
 
-app.loader.add("bunny", "./static/grass.png").load((loader, resources) => {
-  // This creates a texture from a 'bunny.png' image
-  const bunny = new PIXI.Sprite(resources.bunny.texture);
+// app.loader.add("player", "./static/grass.png");
+// app.loader.load((loader, resources) => {
+cashedEntities = {};
+const gameLoop = () => {
+  for (key in entities) {
+    if (Object.keys(cashedEntities).includes(key)) {
+      cashedEntities[key].x = entities[key].playerX;
+      cashedEntities[key].y = entities[key].playerY;
+    } else {
+      cashedEntities[key] = new PIXI.Sprite.from("./static/grass.png");
+      app.stage.addChild(cashedEntities[key]);
+    }
+  }
+};
+app.ticker.add(gameLoop);
+// });
+const entities = {};
 
-  // Setup the position of the bunny
-  bunny.x = app.renderer.width / 2;
-  bunny.y = app.renderer.height / 2;
-
-  // Rotate around the center
-  bunny.anchor.x = 0.5;
-  bunny.anchor.y = 0.5;
-
-  // Add the bunny to the scene we are building
-  app.stage.addChild(bunny);
-
-  // Listen for frame updates
-  app.ticker.add(() => {
-    // each frame we spin the bunny around a bit
-    bunny.rotation += 0.01;
+socket.on("update", (entities_) => {
+  entities_.forEach((entity) => {
+    entities[entity.id] = entity;
   });
 });
-
-// socket.on("update", (entities) => {
-//   ctx.clearRect(0, 0, 600, windowHeigth());
-//   entities.forEach((entity) => {
-//     ctx.fillText(entity.playerName, entity.playerX, entity.playerY);
-//   });
-// });
 
 document.onkeydown = (event) => {
   if (event.keyCode === 68 || event.keyCode === 39)
@@ -92,5 +88,7 @@ document.onkeyup = (event) => {
   if (event.keyCode === 87 || event.keyCode === 38)
     socket.emit("keyPressed", { inputId: "up", state: false });
 };
+
+app.loader.onError.add((error) => console.error(error));
 
 // window.addEventListener("beforeunload", (event) => {});

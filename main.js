@@ -26,11 +26,11 @@ var io = require("socket.io")(server);
 io.on("connection", (connection) => {
   connections[connection.id] = connection;
   const ConnectedPlayer = new connectedPlayer(connection);
-  Game.entities[connection.id] = ConnectedPlayer;
+  Game.addEntity(ConnectedPlayer);
 
   connection.on("disconnect", () => {
     delete connections[connection.id];
-    delete Game.entities[connection.id];
+    Game.removeEntity(connection.id);
     delete ConnectedPlayer;
   });
 

@@ -8,6 +8,14 @@ class Game {
     this.entities = {};
   }
 
+  addEntity(entity) {
+    this.entities[entity.id] = entity;
+  }
+
+  removeEntity(id) {
+    delete this.entities[id];
+  }
+
   listEntities() {
     return Object.values(this.entities);
   }

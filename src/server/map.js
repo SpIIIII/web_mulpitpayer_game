@@ -1,9 +1,12 @@
-class Map {
+class Map_ {
   constructor() {
     this.height = 128;
-    this.widht = 128;
-    this.tiles = new Array(this.height * this.widht).fill(0);
+    this.width = 128;
+    this.tiles = new Array(this.height * this.width).fill(0);
+  }
+  getMap() {
+    return this.tiles;
   }
 }
 
-module.exports = Map;
+module.exports = Map_;

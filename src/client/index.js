@@ -1,72 +1,75 @@
-var socket = io();
+// import { Camera } from "./scripts";
+// import Map_ from "./map";
 
-var mobile = navigator.userAgent.toLowerCase().match(/mobile/i);
-var body = document.getElementsByTagName("BODY")[0];
-var canvas = document.getElementById("gameMap");
-// var ctx = canvas.getContext("2d");
-var height = window.innerHeight - 4;
-var width = 600;
-// var windowHeigth = () => {
-//   return body.clientHeight - 4;
-// };
-// var windowWidth = () => {
-//   return body.clientWidth;
-// };
-// const cahngeHeight = () => {
-//   if (!mobile) {
-//     body.style.maxWidth = "600px";
+let socket = io();
+
+let mobile = navigator.userAgent.toLowerCase().match(/mobile/i);
+let body = document.getElementsByTagName("BODY")[0];
+body.setAttribute("accept-charset", "utf-8");
+let canvas = document.getElementById("gameMap");
+let height = window.innerHeight - 4;
+let width = 600;
+//
+// class Map_ {
+//   constructor() {
+//     this.tiles = [];
 //   }
-//   canvas.setAttribute("width", windowWidth());
-//   canvas.setAttribute("height", windowHeigth() - 4);
-//   if (!mobile) {
-//     ctx.scale(1.7, 1.7);
+//   setMap(tiles) {
+//     this.tiles = tiles;
 //   }
-// };
-const app = new PIXI.Application({
-  view: canvas,
-  width: 600,
-  height: height,
-  resolution: window.devicePixelRatio,
-  autoDensity: true,
-});
+// }
 
-if (window.addEventListener) {
-  window.addEventListener(
-    "resize",
-    () => {
-      height = window.innerHeight - 4;
-      app.renderer.resize(width, height);
-    },
-    true
-  );
-}
-// cahngeHeight();
-
-// document.body.appendChild(app.view);
-
-// app.loader.add("player", "./static/grass.png");
-// app.loader.load((loader, resources) => {
-cashedEntities = {};
-const gameLoop = () => {
-  for (key in entities) {
-    if (Object.keys(cashedEntities).includes(key)) {
-      cashedEntities[key].x = entities[key].playerX;
-      cashedEntities[key].y = entities[key].playerY;
-    } else {
-      cashedEntities[key] = new PIXI.Sprite.from("./static/grass.png");
-      app.stage.addChild(cashedEntities[key]);
-    }
-  }
-};
-app.ticker.add(gameLoop);
-// });
-const entities = {};
-
-socket.on("update", (entities_) => {
-  entities_.forEach((entity) => {
-    entities[entity.id] = entity;
+window.onload = () => {
+  const char_texture = "../static/test_char/sprite_1.png";
+  const grass_texture = "../static/grass_tile.png";
+  const asphalt_texture = "../static/asphalt_tile.png";
+  const textures = {
+    char_texture: char_texture,
+    grass_texture: grass_texture,
+    asphalt_texture: asphalt_texture,
+  };
+  const app = new PIXI.Application({
+    view: canvas,
+    width: 600,
+    height: height,
+    resolution: window.devicePixelRatio,
+    autoDensity: true,
   });
-});
+  if (!mobile) {
+    app.stage.scale.set(1.69);
+  }
+
+  const game = new Game({
+    app: app,
+    textures: textures,
+  });
+
+  if (window.addEventListener) {
+    window.addEventListener(
+      "resize",
+      () => {
+        height = window.innerHeight - 4;
+        app.renderer.resize(width, height);
+      },
+      true
+    );
+  }
+
+  // const cashedEntities = {};
+  const gameLoop = () => {
+    game.update();
+  };
+  app.ticker.add(gameLoop);
+  const entities = {};
+
+  socket.on("init", (map_) => {
+    game.setMat(map_);
+  });
+
+  socket.on("update", (entities_) => {
+    game.setEntities(entities_);
+  });
+};
 
 document.onkeydown = (event) => {
   if (event.keyCode === 68 || event.keyCode === 39)
@@ -89,6 +92,4 @@ document.onkeyup = (event) => {
     socket.emit("keyPressed", { inputId: "up", state: false });
 };
 
-app.loader.onError.add((error) => console.error(error));
-
-// window.addEventListener("beforeunload", (event) => {});
+// app.loader.onError.add((error) => console.error(error));

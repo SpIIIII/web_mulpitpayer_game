@@ -3,7 +3,7 @@ const camera = require("./camera");
 
 class Game {
   constructor() {
-    const Map_ = new map_();
+    this.Map_ = new map_();
     const Camera = new camera();
     this.entities = {};
   }
@@ -24,6 +24,13 @@ class Game {
     for (let id in this.entities) {
       this.entities[id].update();
     }
+  }
+  getEntities() {
+    return this.entities;
+  }
+
+  getMap() {
+    return this.Map_;
   }
 }
 

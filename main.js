@@ -1,12 +1,8 @@
 const connectedPlayer = require("./src/server/connectedPlayer");
-
 const game = require("./src/server/game");
 const express = require("express");
-
 const app = express();
-
 const connections = {};
-
 const Game = new game()
 
 app.use(express.static(__dirname + "/src/client"));
@@ -23,10 +19,12 @@ var server = app.listen(process.env.PORT || 8082, () => {
 
 // listen for reqs :)
 var io = require("socket.io")(server);
+
 io.on("connection", (connection) => {
   connections[connection.id] = connection;
   const ConnectedPlayer = new connectedPlayer(connection);
   Game.addEntity(ConnectedPlayer);
+  connection.emit("init", Game.getMap())
 
   connection.on("disconnect", () => {
     delete connections[connection.id];
@@ -36,9 +34,10 @@ io.on("connection", (connection) => {
 
 });
 
+
+
 setInterval(() => {
   Game.update()
-
   for (let id in connections) {
     connections[id].emit("update", Game.listEntities());
   }

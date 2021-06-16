@@ -1,7 +1,7 @@
 class Map_ {
   constructor() {
-    this.height = 128;
-    this.width = 128;
+    this.height = 32;
+    this.width = 32;
     this.tiles = new Array(this.height * this.width).fill(0);
   }
   getMap() {

@@ -2,10 +2,12 @@ class Game {
   constructor(params) {
     this.Map_ = new Map_();
     this.Camera = new Camera({ app: params.app, textures: params.textures });
-    // this.Camera = params.camera;
-    // this.map_ = params.map_;
+    this.controller = new Controller({
+      controller: params.controller,
+      socket: params.socket,
+    });
+    this.socket = params.socket;
     this.entities = {};
-    // this.Camera.drawMap(this.map_);
   }
 
   setMat(Map_) {

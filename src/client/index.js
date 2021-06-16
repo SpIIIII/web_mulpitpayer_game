@@ -9,15 +9,6 @@ body.setAttribute("accept-charset", "utf-8");
 let canvas = document.getElementById("gameMap");
 let height = window.innerHeight - 4;
 let width = 600;
-//
-// class Map_ {
-//   constructor() {
-//     this.tiles = [];
-//   }
-//   setMap(tiles) {
-//     this.tiles = tiles;
-//   }
-// }
 
 window.onload = () => {
   const char_texture = "../static/test_char/sprite_1.png";
@@ -29,12 +20,20 @@ window.onload = () => {
     asphalt_texture: asphalt_texture,
   };
   const app = new PIXI.Application({
+    antialias: true,
     view: canvas,
     width: 600,
     height: height,
     resolution: window.devicePixelRatio,
     autoDensity: true,
   });
+  let control = new PIXI.Graphics();
+  control.beginFill();
+  control.drawRect(0, 200, app.view.width, app.view.height);
+  control.endFill();
+  control.interactive = true;
+  app.stage.addChild(control);
+
   if (!mobile) {
     app.stage.scale.set(1.69);
   }
@@ -42,6 +41,8 @@ window.onload = () => {
   const game = new Game({
     app: app,
     textures: textures,
+    controller: control,
+    socket: socket,
   });
 
   if (window.addEventListener) {

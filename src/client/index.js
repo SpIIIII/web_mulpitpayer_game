@@ -67,6 +67,9 @@ window.onload = () => {
   socket.on("init", (map_) => {
     game.setMat(map_);
   });
+  socket.on("disconnect", (id) => {
+    game.disconnectEntity(id);
+  });
 
   socket.on("update", (entities_) => {
     game.setEntities(entities_);

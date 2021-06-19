@@ -22,24 +22,34 @@ var io = require("socket.io")(server);
 
 io.on("connection", (connection) => {
   connections[connection.id] = connection;
-  const ConnectedPlayer = new connectedPlayer(connection);
-  Game.addEntity(ConnectedPlayer);
+  let ConnectedPlayer = new connectedPlayer(connection);
+
+  Game.addPlayer(ConnectedPlayer)
+  Game.addEntity(ConnectedPlayer.getEntity());
   connection.emit("init", Game.getMap())
 
   connection.on("disconnect", () => {
-    delete connections[connection.id];
     Game.removeEntity(connection.id);
+    Game.removePlayer(connection.id);
     delete ConnectedPlayer;
+    delete connections[connection.id];
+    // emmitDisconnect(connection.id)
   });
 
 });
 
 
+const emmitDisconnect = (id) => {
+  for (let id in connections) {
+    connections[id].emit("disconnect", id);
+  }
+  
+}
 
 setInterval(() => {
   Game.update()
   for (let id in connections) {
-    connections[id].emit("update", Game.listEntities());
+    connections[id].emit("update", Game.getListEntities());
   }
 }, 25);
 

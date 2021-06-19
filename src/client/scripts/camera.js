@@ -2,7 +2,7 @@ class Camera {
   constructor(params) {
     this.textures = params.textures;
     this.app = params.app;
-    this.entities = {};
+    this.sprites = {};
   }
 
   cart_to_isom = (xy) => {
@@ -36,14 +36,19 @@ class Camera {
   }
 
   draw(params) {
+    console.log(Object.keys(this.sprites).length);
     for (let key in params.entities) {
-      if (Object.keys(this.entities).includes(key)) {
-        this.entities[key].x = params.entities[key].playerX;
-        this.entities[key].y = params.entities[key].playerY;
+      if (Object.keys(this.sprites).includes(key)) {
+        this.sprites[key].x = params.entities[key].location_X;
+        this.sprites[key].y = params.entities[key].location_Y;
       } else {
-        this.entities[key] = new PIXI.Sprite.from(this.textures.char_texture);
-        this.app.stage.addChild(this.entities[key]);
+        this.sprites[key] = params.entities[key].sprite;
+        this.app.stage.addChild(this.sprites[key]);
       }
+      // if (!Object.keys(params.entities).includes(key)) {
+      //   this.app.stage.removeChild(this.sprites[key]);
+      //   delete this.sprites[key];
+      // }
     }
   }
 }

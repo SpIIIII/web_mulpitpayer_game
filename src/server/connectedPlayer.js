@@ -1,17 +1,22 @@
+const entity = require("./entity");
 class ConnectedPlayer {
   constructor(connection) {
+    this.Entity = new entity();
+    this.Entity.id = connection.id;
+    this.Entity.type = "player";
+    this.Entity.location_X = 0;
+    this.Entity.location_Y = 0;
+    this.Entity.Name = "P" + this.Entity.id.slice(0, 3);
     this.id = connection.id;
-    this.playerX = 0;
-    this.playerY = 0;
-    this.playerName = "P" + this.id.slice(0, 2);
     this.moveRigth = false;
     this.moveLeft = false;
     this.moveUp = false;
     this.moveDown = false;
-    this.speed = 2.5;
-    this.speedScale = 1;
+    this.Entity.speed = 2.5;
+    this.Entity.speedScale = 1;
 
     connection.on("keyPressed", (data) => {
+      // console.log(this.Entity.Name, this.Entity.location_X);
       if (data.inputId === "right") this.moveRigth = data.state;
       if (data.inputId === "left") this.moveLeft = data.state;
       if (data.inputId === "up") this.moveUp = data.state;
@@ -38,12 +43,21 @@ class ConnectedPlayer {
   }
   updateMove() {
     if (this.moveRigth + this.moveLeft + this.moveDown + this.moveUp > 1)
-      this.speedScale = 0.7;
-    else this.speedScale = 1;
-    if (this.moveRigth) this.playerX += this.speed * this.speedScale;
-    if (this.moveLeft) this.playerX -= this.speed * this.speedScale;
-    if (this.moveUp) this.playerY -= this.speed * this.speedScale;
-    if (this.moveDown) this.playerY += this.speed * this.speedScale;
+      this.Entity.speedScale = 0.7;
+    else this.Entity.speedScale = 1;
+    if (this.moveRigth) {
+      this.Entity.location_X += this.Entity.speed * this.Entity.speedScale;
+    }
+
+    if (this.moveLeft)
+      this.Entity.location_X -= this.Entity.speed * this.Entity.speedScale;
+    if (this.moveUp)
+      this.Entity.location_Y -= this.Entity.speed * this.Entity.speedScale;
+    if (this.moveDown)
+      this.Entity.location_Y += this.Entity.speed * this.Entity.speedScale;
+  }
+  getEntity() {
+    return this.Entity;
   }
 }
 

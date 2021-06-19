@@ -6,23 +6,33 @@ class Game {
     this.Map_ = new map_();
     const Camera = new camera();
     this.entities = {};
+    this.players = {};
   }
 
   addEntity(entity) {
     this.entities[entity.id] = entity;
   }
+  addPlayer(player) {
+    this.players[player.id] = player;
+  }
 
   removeEntity(id) {
     delete this.entities[id];
   }
+  removePlayer(id) {
+    delete this.players[id];
+  }
 
-  listEntities() {
+  getListEntities() {
     return Object.values(this.entities);
   }
 
   update() {
     for (let id in this.entities) {
       this.entities[id].update();
+    }
+    for (let id in this.players) {
+      this.players[id].update();
     }
   }
   getEntities() {

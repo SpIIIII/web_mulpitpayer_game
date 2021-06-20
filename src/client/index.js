@@ -62,13 +62,13 @@ window.onload = () => {
     game.update();
   };
   app.ticker.add(gameLoop);
-  const entities = {};
 
-  socket.on("init", (map_) => {
-    game.setMat(map_);
+  socket.on("init", (params) => {
+    game.setMat(params.map);
+    game.setID(params.youID);
   });
-  socket.on("disconnect", (id) => {
-    game.disconnectEntity(id);
+  socket.on("disc", (id) => {
+    game.disconnectPlayer(id);
   });
 
   socket.on("update", (entities_) => {

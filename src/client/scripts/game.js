@@ -30,7 +30,13 @@ class Game {
       }
     });
   }
-  disconnectEntity(id) {
+
+  setID(id) {
+    this.ID = id;
+  }
+
+  disconnectPlayer(id) {
+    this.Camera.removeSprite(id);
     delete this.entities[id];
   }
 

@@ -35,8 +35,12 @@ class Camera {
     }
   }
 
+  removeSprite(spriteId) {
+    this.app.stage.removeChild(this.sprites[spriteId]);
+    delete this.sprites[spriteId];
+  }
+
   draw(params) {
-    console.log(Object.keys(this.sprites).length);
     for (let key in params.entities) {
       if (Object.keys(this.sprites).includes(key)) {
         this.sprites[key].x = params.entities[key].location_X;

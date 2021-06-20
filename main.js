@@ -3,7 +3,7 @@ const game = require("./src/server/game");
 const express = require("express");
 const app = express();
 const connections = {};
-const Game = new game()
+const Game = new game();
 
 app.use(express.static(__dirname + "/src/client"));
 
@@ -24,32 +24,29 @@ io.on("connection", (connection) => {
   connections[connection.id] = connection;
   let ConnectedPlayer = new connectedPlayer(connection);
 
-  Game.addPlayer(ConnectedPlayer)
+  Game.addPlayer(ConnectedPlayer);
   Game.addEntity(ConnectedPlayer.getEntity());
-  connection.emit("init", Game.getMap())
+  connection.emit("init", { youID: connection.id, map: Game.getMap() });
 
   connection.on("disconnect", () => {
-    Game.removeEntity(connection.id);
     Game.removePlayer(connection.id);
-    delete ConnectedPlayer;
-    delete connections[connection.id];
-    // emmitDisconnect(connection.id)
-  });
+    Game.removeEntity(connection.id);
 
+    // delete ConnectedPlayer;
+    delete connections[connection.id];
+    emmitDisconnect(connection.id);
+  });
 });
 
-
 const emmitDisconnect = (id) => {
-  for (let id in connections) {
-    connections[id].emit("disconnect", id);
+  for (let c_id in connections) {
+    connections[c_id].emit("disc", id);
   }
-  
-}
+};
 
 setInterval(() => {
-  Game.update()
+  Game.update();
   for (let id in connections) {
     connections[id].emit("update", Game.getListEntities());
   }
 }, 25);
-

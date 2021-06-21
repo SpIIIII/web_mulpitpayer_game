@@ -4,8 +4,9 @@ class Game {
     this.textures = params.textures;
     this.Camera = new Camera({ app: params.app, textures: this.textures });
     this.controller = new Controller({
-      controller: params.controller,
+      control_container: params.control_container,
       socket: params.socket,
+      joystick_texture: this.textures.joystick_texture,
     });
     this.socket = params.socket;
     this.entities = {};

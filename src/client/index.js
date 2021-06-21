@@ -15,10 +15,12 @@ window.onload = () => {
   const char_texture = "../static/test_char/sprite_1.png";
   const grass_texture = "../static/grass_tile.png";
   const asphalt_texture = "../static/asphalt_tile.png";
+  const joystick_texture = "../static/joystick.png";
   const textures = {
     char_texture: char_texture,
     grass_texture: grass_texture,
     asphalt_texture: asphalt_texture,
+    joystick_texture: joystick_texture,
   };
   const app = new PIXI.Application({
     antialias: true,
@@ -28,12 +30,15 @@ window.onload = () => {
     resolution: window.devicePixelRatio,
     autoDensity: true,
   });
+  let control_container = new PIXI.Container();
   let control = new PIXI.Graphics();
+  control.name = "control";
+  control_container.addChild(control);
+  app.stage.addChild(control_container);
   control.beginFill();
   control.drawRect(0, 200, app.view.width, app.view.height);
   control.endFill();
   control.interactive = true;
-  app.stage.addChild(control);
 
   if (!mobile) {
     app.stage.scale.set(1.69);
@@ -42,7 +47,7 @@ window.onload = () => {
   const game = new Game({
     app: app,
     textures: textures,
-    controller: control,
+    control_container: control_container,
     socket: socket,
   });
 

@@ -12,7 +12,7 @@ class ConnectedPlayer {
     this.moveLeft = false;
     this.moveUp = false;
     this.moveDown = false;
-    this.Entity.speed = 0.5;
+    this.Entity.speed = 1;
     this.Entity.speedScale = 1;
 
     connection.on("keyPressed", (data) => {

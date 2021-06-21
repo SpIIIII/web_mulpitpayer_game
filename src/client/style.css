@@ -11,7 +11,7 @@ body {
 #gameMap {
   /* width: 600px; */
   /* height: 100vh; */
-  background-color: rgba(255, 127, 80, 0.309);
+  background-color: rgba(255, 255, 255, 0.309);
   /* scale: 1.5; */
   z-index: 5;
 }

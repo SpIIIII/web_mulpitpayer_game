@@ -1,25 +1,25 @@
 class Controller {
-  constructor(params) {
-    this.control_container = params.control_container;
+  constructor(game) {
+    this.control_container = game.control_container;
     this.controller = this.control_container.getChildByName("control");
-    this.socket = params.socket;
-    this.joystick_texture = params.joystick_texture;
+    this.socket = game.socket;
+    this.joystick_texture = game.joystick_texture;
     this.x_curent = 0;
     this.y_curent = 0;
     this.x_origin = 0;
     this.y_origin = 0;
-    this.activatio_distnce = 50;
+    this.activatio_distnce = 40;
     this.controller.on("touchstart", (e) => {
-      console.log(this.joystick_texture);
-      const joystick = new PIXI.Sprite.from(this.joystick_texture);
-
+      this.joystick = new PIXI.Sprite.from(game.textures.joystick_texture);
+      this.joystick.name = "joystick";
       this.x_origin = e.data.global.x;
       this.y_origin = e.data.global.y;
-      joystick.x = this.x_origin;
-      joystick.y = this.y_origin;
-      this.control_container.addChild(joystick);
+      this.joystick.x = this.x_origin - 150;
+      this.joystick.y = this.y_origin - 100;
+      this.control_container.addChild(this.joystick);
     });
     this.controller.on("touchend", (e) => {
+      this.control_container.removeChild(this.joystick);
       this.socket.emit("keyPressed", { inputId: "all_stop" });
     });
     this.controller.on("touchmove", (e) => {

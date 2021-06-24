@@ -27,20 +27,22 @@ class Game {
     return Object.values(this.entities);
   }
 
-  update() {
-    for (let id in this.entities) {
-      this.entities[id].update();
-    }
-    for (let id in this.players) {
-      this.players[id].update();
-    }
-  }
   getEntities() {
     return this.entities;
   }
 
   getMap() {
     return this.Map_;
+  }
+
+  update() {
+    for (let id in this.entities) {
+      this.entities[id].update();
+      this.Map_.heightLightCell([0, 0]);
+    }
+    for (let id in this.players) {
+      this.players[id].update();
+    }
   }
 }
 

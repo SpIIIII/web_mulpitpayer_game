@@ -17,17 +17,15 @@ class Map_ {
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ];
-    // this.tiles = [
-    //   [1, 1, 1],
-    //   [0, 0, 1],
-    //   [0, 0, 0],
-    // ];
+
     this.height = this.tiles.length;
     this.width = this.tiles[0].length;
   }
   getMap() {
     return this.tiles;
   }
+
+  heightLightCell() {}
 }
 
 module.exports = Map_;

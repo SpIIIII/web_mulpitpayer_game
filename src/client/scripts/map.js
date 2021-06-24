@@ -5,6 +5,10 @@ class Map_ {
     this.height = 0;
     this.width = 0;
   }
+  heightLightTile(params) {
+    // if
+  }
+
   setMap(map_) {
     this.height = map_.height;
     this.width = map_.width;
@@ -13,5 +17,11 @@ class Map_ {
 
   drawMap() {
     this.tiles.forEach((tile) => {});
+  }
+}
+
+class Tile {
+  constructor() {
+    this.entities = [];
   }
 }

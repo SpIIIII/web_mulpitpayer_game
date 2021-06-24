@@ -1,8 +1,10 @@
 class Camera {
-  constructor(params) {
-    this.textures = params.textures;
-    this.app = params.app;
+  constructor(game) {
+    this.textures = game.textures;
+    this.app = game.app;
     this.sprites = {};
+    this.entities = game.entities;
+    this.map_ = game.map_;
   }
 
   cart_to_isom = (xy) => {
@@ -40,19 +42,15 @@ class Camera {
     delete this.sprites[spriteId];
   }
 
-  draw(params) {
-    for (let key in params.entities) {
+  draw() {
+    for (let key in this.entities) {
       if (Object.keys(this.sprites).includes(key)) {
-        this.sprites[key].x = params.entities[key].location_X;
-        this.sprites[key].y = params.entities[key].location_Y;
+        this.sprites[key].x = this.entities[key].location_X;
+        this.sprites[key].y = this.entities[key].location_Y;
       } else {
-        this.sprites[key] = params.entities[key].sprite;
+        this.sprites[key] = this.entities[key].sprite;
         this.app.stage.addChild(this.sprites[key]);
       }
-      // if (!Object.keys(params.entities).includes(key)) {
-      //   this.app.stage.removeChild(this.sprites[key]);
-      //   delete this.sprites[key];
-      // }
     }
   }
 }
